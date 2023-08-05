@@ -14,16 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MessageController {
 
-
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
-    @MessageMapping("/chat/{to}")  // chat은 websocketConfiguration에서 registry.addEndpoint("/chat") 여기있는 chat임. // to 누구에게 보낼 것인가.
+    @MessageMapping("/chat/{to}")
     public void sendMessage(@DestinationVariable String to, MessageModel message) {
-        System.out.println("handling sned message: " + message + " to:" + to);
+        System.out.println("handling send message: " + message + " to: " + to);
         boolean isExists = UserStorage.getInstance().getUsers().contains(to);
         if (isExists) {
-            simpMessagingTemplate.convertAndSend("/topic/messages/" + to, message);  // topic은 websocketConfiguration에서 enableSimpleBroker("/topic"); 이것.
+            simpMessagingTemplate.convertAndSend("/topic/messages/" + to, message);
         }
     }
 }
